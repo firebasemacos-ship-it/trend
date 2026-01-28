@@ -30,6 +30,7 @@ import {
   CreditCard,
   FileText,
   UserCheck,
+  Settings,
 } from 'lucide-react';
 import Image from 'next/image';
 import logo from '@/app/assets/logo.png';
@@ -67,6 +68,7 @@ const navItems = [
   { href: '/admin/notifications', icon: Bell, label: 'إدارة الإشعارات', permissionId: 'notifications' },
   { href: '/admin/data-export', icon: Download, label: 'تصدير البيانات', permissionId: 'data_export' },
   { href: '/admin/exchange-rate', icon: DollarSign, label: 'اسعار الصرف والشحن', permissionId: 'exchange_rate' },
+  { href: '/admin/settings', icon: Settings, label: 'إعدادات التطبيق', permissionId: 'dashboard' },
 ];
 
 const getPageTitle = (pathname: string): string => {
@@ -91,6 +93,7 @@ const getPageTitle = (pathname: string): string => {
     '/admin/notifications': 'إدارة الإشعارات',
     '/admin/data-export': 'تصدير البيانات',
     '/admin/exchange-rate': 'اسعار الصرف والشحن',
+    '/admin/settings': 'إعدادات التطبيق',
   };
 
   if (pathname.startsWith('/admin/users/print')) return 'طباعة كشف حساب المستخدم';

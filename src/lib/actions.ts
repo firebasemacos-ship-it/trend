@@ -163,6 +163,45 @@ export async function recalculateUserStats(userId: string): Promise<void> {
 
 
 // --- Settings Actions ---
+import { createClient } from '@supabase/supabase-js';
+
+// Create a Supabase client with the SERVICE ROLE KEY to bypass RLS for admin actions
+const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+export async function updateStoreVisibility(enabled: boolean, managerId: string): Promise<boolean> {
+    try {
+        // 1. Verify the manager exists (basic security check)
+        const manager = await getManagerById(managerId);
+        if (!manager) {
+            console.error("Unauthorized attempt to change store visibility");
+            return false;
+        }
+
+        // 2. Perform the update using the Service Role Client
+        const { error } = await supabaseAdmin
+            .from('app_settings')
+            .upsert({
+                setting_key: 'store_enabled',
+                setting_value: enabled ? 'true' : 'false',
+                updated_by: managerId,
+                updated_at: new Date().toISOString()
+            }, { onConflict: 'setting_key' });
+
+        if (error) {
+            console.error("Supabase Admin Error:", error);
+            throw error;
+        }
+
+        return true;
+    } catch (error) {
+        console.error("Error updating store visibility:", error);
+        return false;
+    }
+}
+
 export async function getAppSettings(): Promise<AppSettings> {
     try {
         const settingsRef = doc(db, SETTINGS_COLLECTION, 'main');

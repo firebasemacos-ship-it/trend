@@ -148,7 +148,7 @@ const SplashScreen = () => {
       </motion.div>
 
       <footer className="absolute bottom-4 text-xs text-muted-foreground z-10">
-        جميع الحقوق محفوظة لشركة تمويل
+        جميع الحقوق محفوظة لشركة هوية للتسويق الرقمي
       </footer>
     </div>
   );
