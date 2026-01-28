@@ -71,7 +71,7 @@ export default function PrivacyPolicy() {
                         </p>
                         <div className="mt-4 bg-gray-50 p-4 rounded-lg">
                             <p className="text-gray-800">البريد الإلكتروني: <a href="mailto:support@trendplus.ly" className="text-blue-600 hover:underline">support@trendplus.ly</a></p>
-                            <p className="text-gray-800 mt-1">الهاتف: +218 91 000 0000</p>
+                            <p className="text-gray-800 mt-1">الهاتف: +218 94 444 4170</p>
                         </div>
                     </section>
                 </div>
