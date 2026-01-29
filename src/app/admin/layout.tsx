@@ -53,11 +53,8 @@ const navItems = [
   { href: '/admin/employees', icon: Briefcase, label: 'إدارة المدراء', permissionId: 'employees' },
   { href: '/admin/representatives', icon: Bike, label: 'إدارة المندوبين', permissionId: 'representatives' },
   { href: '/admin/orders', icon: ShoppingCart, label: 'إدارة الطلبات', permissionId: 'orders' },
-  { href: '/admin/orders', icon: Package, label: 'الطلبات', permissionId: 'orders' }, // Added item
-  { href: '/admin/cards', icon: CreditCard, label: 'إدارة البطاقات', permissionId: 'cards' }, // Added item
-  { href: '/admin/shipping-label', icon: FileText, label: 'بوالص الشحن', permissionId: 'shipping_label' }, // Added item
-  { href: '/admin/temporary-users', icon: UserCheck, label: 'مستخدمين مؤقتين', permissionId: 'temporary_users' }, // Added item
-  { href: '/admin/shipping-label', icon: Printer, label: 'إنشاء بوليصة شحن', permissionId: 'shipping_label' },
+  { href: '/admin/cards', icon: CreditCard, label: 'إدارة البطاقات', permissionId: 'cards' },
+  { href: '/admin/shipping-label', icon: Printer, label: 'بوالص الشحن', permissionId: 'shipping_label' },
   { href: '/admin/temporary-users', icon: Users2, label: 'المستخدمين المؤقتين', permissionId: 'temporary_users' },
   { href: '/admin/financial-reports', icon: BarChart, label: 'التقارير المالية', permissionId: 'financial_reports' },
   { href: '/admin/instant-sales', icon: Zap, label: 'مبيعات فورية', permissionId: 'instant_sales' },

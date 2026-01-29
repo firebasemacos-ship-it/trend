@@ -771,9 +771,43 @@ export async function updateOrder(orderId: string, data: Partial<Omit<Order, 'id
             console.error("Order not found, cannot update.");
             return false;
         }
-        const userId = orderSnap.data().userId;
+        const currentOrder = orderSnap.data() as Order;
+        const userId = currentOrder.userId;
 
         await updateDoc(orderRef, data);
+
+        // Trigger notification if status changed
+        if (data.status && currentOrder.status !== data.status) {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/push-notification`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        record: {
+                            id: orderId,
+                            user_id: userId,
+                            userId: userId, // Send both for compatibility
+                            status: data.status
+                        },
+                        old_record: {
+                            status: currentOrder.status
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    console.error('Notification trigger failed:', await response.text());
+                } else {
+                    console.log('Notification sent successfully for order:', orderId);
+                }
+            } catch (notifError) {
+                console.error('Error triggering notification:', notifError);
+                // Don't fail the order update if notification fails
+            }
+        }
 
         if (userId) {
             await recalculateUserStats(userId);
@@ -1705,6 +1739,33 @@ export async function sendNotification(message: string, targetType: 'all' | 'spe
         };
 
         await addDoc(collection(db, NOTIFICATIONS_COLLECTION), notificationData);
+
+        // Trigger push notification via Edge Function
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/push-notification`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    type: 'custom',
+                    message: message,
+                    target: targetType,
+                    userId: userId || null
+                })
+            });
+
+            if (!response.ok) {
+                console.error('Push notification trigger failed:', await response.text());
+            } else {
+                console.log('Custom notification sent successfully');
+            }
+        } catch (pushError) {
+            console.error('Error triggering push notification:', pushError);
+            // Don't fail the whole operation if push fails
+        }
+
         return true;
     } catch (error) {
         console.error("Error sending notification:", error);
